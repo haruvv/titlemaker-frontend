@@ -7,6 +7,46 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const formatEvaluation = (evaluation) => {
+    if (!evaluation || typeof evaluation !== "object") return null;
+
+    // 評価結果を整形
+    const formattedEvaluation = {
+      ジャンル: evaluation.genre || "不明",
+      ターゲット層: evaluation.target_audience || "不明",
+      アピールポイント: evaluation.appeal_points || [],
+      評価スコア: evaluation.rating ? `${evaluation.rating}/10` : "未評価",
+    };
+
+    return formattedEvaluation;
+  };
+
+  const renderEvaluation = (evaluation) => {
+    const formatted = formatEvaluation(evaluation);
+    if (!formatted) return null;
+
+    return (
+      <div className="space-y-4">
+        {Object.entries(formatted).map(([key, value]) => (
+          <div key={key} className="border-b pb-2">
+            <h3 className="font-semibold text-gray-700">{key}</h3>
+            {Array.isArray(value) ? (
+              <ul className="list-disc list-inside">
+                {value.map((item, index) => (
+                  <li key={index} className="text-gray-600">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-600">{value}</p>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   const handleEvaluate = async () => {
     setLoading(true);
     setError(null);
@@ -15,15 +55,23 @@ function App() {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/evaluate`,
-        { title }
+        { title },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
       );
+
       if (response.data.success) {
         setEvaluation(response.data.data.evaluation);
       } else {
-        setError("評価に失敗しました。");
+        setError(response.data.message || "評価に失敗しました。");
       }
     } catch (err) {
-      setError("エラーが発生しました。");
+      console.error("API Error:", err.response?.data || err.message);
+      setError(err.response?.data?.message || "エラーが発生しました。");
     } finally {
       setLoading(false);
     }
@@ -42,18 +90,22 @@ function App() {
         />
         <button
           onClick={handleEvaluate}
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-          disabled={loading}
+          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
+          disabled={loading || !title.trim()}
         >
           {loading ? "評価中..." : "評価する"}
         </button>
-        {error && <p className="text-red-500 mt-4">{error}</p>}
+        {error && (
+          <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            {error}
+          </div>
+        )}
         {evaluation && (
-          <div className="mt-4">
-            <h2 className="text-xl font-semibold">評価結果</h2>
-            <pre className="bg-gray-100 p-2 rounded mt-2">
-              {JSON.stringify(evaluation, null, 2)}
-            </pre>
+          <div className="mt-6">
+            <h2 className="text-xl font-semibold mb-4">評価結果</h2>
+            <div className="bg-gray-50 p-4 rounded">
+              {renderEvaluation(evaluation)}
+            </div>
           </div>
         )}
       </div>
