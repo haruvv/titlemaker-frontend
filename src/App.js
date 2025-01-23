@@ -53,6 +53,10 @@ function App() {
     setEvaluation(null);
 
     try {
+      console.log(
+        "Sending request to:",
+        `${process.env.REACT_APP_API_URL}/api/evaluate`
+      );
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/evaluate`,
         { title },
@@ -63,6 +67,7 @@ function App() {
           },
         }
       );
+      console.log("Response:", response.data);
 
       if (response.data.success) {
         setEvaluation(response.data.data.evaluation);
@@ -70,7 +75,11 @@ function App() {
         setError(response.data.message || "評価に失敗しました。");
       }
     } catch (err) {
-      console.error("API Error:", err.response?.data || err.message);
+      console.error("Error details:", {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status,
+      });
       setError(err.response?.data?.message || "エラーが発生しました。");
     } finally {
       setLoading(false);
