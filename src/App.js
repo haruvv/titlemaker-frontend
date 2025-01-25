@@ -255,15 +255,27 @@ function App() {
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
         {/* ヘッダー */}
         <div className="text-center mb-6 sm:mb-12">
-          <h1 className="text-3xl sm:text-5xl font-extrabold">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-pink-500">
-              AVタイトルメーカー
-            </span>
-          </h1>
-          <p className="mt-2 sm:mt-4 text-sm sm:text-lg text-gray-600">
-            <span className="text-pink-500">❤</span>{" "}
-            AIがあなたのタイトルを多角的に分析します
-          </p>
+          <div className="flex items-center justify-center mb-4">
+            <h1 className="text-3xl sm:text-5xl font-extrabold ml-3">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-pink-500">
+                タイトルメーカー
+              </span>
+            </h1>
+          </div>
+          <div className="flex flex-col items-center space-y-2">
+            <p className="text-sm sm:text-lg text-gray-600">
+              <span className="text-pink-500">❤</span>{" "}
+              AIが魅力的なタイトルを分析
+            </p>
+            <div className="flex items-center space-x-2 text-xs sm:text-sm text-gray-500">
+              <span className="px-3 py-1 bg-gray-100 rounded-full">
+                インパクト
+              </span>
+              <span className="px-3 py-1 bg-gray-100 rounded-full">妄想力</span>
+              <span className="px-3 py-1 bg-gray-100 rounded-full">エロ度</span>
+              <span className="px-3 py-1 bg-gray-100 rounded-full">独創性</span>
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-4 sm:gap-8">
@@ -289,7 +301,7 @@ function App() {
                     placeholder="例：清楚な人妻が..."
                     className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-xl border-2 border-pink-200 
                       focus:border-pink-500 focus:ring-4 focus:ring-pink-200 
-                      transition-all duration-200 text-sm sm:text-base"
+                      transition-all duration-200 text-base"
                   />
                 </div>
 
