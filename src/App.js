@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { PROMPT_MODES, PROMPT_MODE_LABELS } from "./constants/promptModes";
+import Maintenance from "./components/Maintenance";
 
 function App() {
   const [title, setTitle] = useState("");
@@ -8,6 +9,12 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [promptMode, setPromptMode] = useState(PROMPT_MODES.CASUAL); // "casual"をデフォルトに設定
+
+  const isMaintenanceMode = process.env.REACT_APP_MAINTENANCE_MODE === "true";
+
+  if (isMaintenanceMode) {
+    return <Maintenance />;
+  }
 
   // 評価結果を整形する関数
   const formatEvaluation = (evaluation) => {
